@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure:5
+    ports:
+      - 3000:3000
+    command: [ npm, run, start:dev ]
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /home/node/app
+
+        - action: rebuild
+          path: package.json
+          target: /home/node/app/package.json
