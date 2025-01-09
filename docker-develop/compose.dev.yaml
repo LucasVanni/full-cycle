@@ -1,0 +1,87 @@
+include:
+  - ./external-api/compose.external-api.yaml
+
+services:
+  web1:
+    extends:
+      file: compose.common.yaml
+      service: web
+    ports:
+      - 3000:3000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web2:
+    extends:
+      file: compose.common.yaml
+      service: web
+    profiles: [nginx]
+    ports:
+      - 3001:3000
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  nginx:
+    build:
+      context: .docker/nginx
+      dockerfile: Dockerfile
+    restart: always
+    profiles: [nginx]
+    ports:
+      - 4000:80
+    develop:
+      watch:
+        - action: sync+restart
+          x-initialSync: true
+          path: ./.docker/nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1-apache
+    profiles: [debug]
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    ports:
+      - 8080:80
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0.38-debian
+    restart: on-failure:5
+    environment:
+      - MYSQL_DATABASE=my_database
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  #   depends_on:
+  #     - XPTO
+    # networks:
+    #   - db
+
+  # XPTO: -> Apenas para exemplificar o uso do restart no serviço db rodando com mysql
+  #   image: XPTO:latest
+  #   healthcheck:
+  #     test: ["executable", "arg"]
+  #     interval: 1m30s
+  #     timeout: 30s
+  #     retries: 5
+  #     start_period: 30s
+
+# networks:
+#   external-api_default:
+#     external: true
+#   db:

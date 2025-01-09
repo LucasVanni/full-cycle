@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      args:
+        - NODE_VERSION=${NODE_VERSION:-22.12.0}
+        - NODMON_VERSION=${NODMON_VERSION:-3.1.7}
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/home/node/app
+    # environment: -> Tem esse enviroment com precendencia sobre o env_file
+    #   - XPTO=${XPTO_etc:-default}
+    env_file:
+      - .env
+      # - path: .env.override 
+      #   required: false
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+        # restart: true
+    # networks:
+    #   - external-api_default
+    #   - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

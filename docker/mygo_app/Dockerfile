@@ -1,6 +1,6 @@
-FROM golang:latest AS builder
+FROM golang:1.21 AS builder
 
-LABEL maintainer="Wesley Willians"
+LABEL maintainer="Lucas Vanni"
 
 WORKDIR /app
 COPY . .
