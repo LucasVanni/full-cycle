@@ -1,2 +1,2 @@
-FROM lucasvanni/docker-node-base:latest
+FROM wesleywillians/docker-node-base:latest
 
