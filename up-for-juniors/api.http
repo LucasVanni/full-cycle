@@ -1,0 +1,67 @@
+### Login
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@partner.com",
+  "password": "123456"
+}
+
+###
+ @tokenPartner1 = {{login.response.body.token}}
+
+### Cadastro de Partners
+POST http://localhost:3000/api/auth/partners
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@partner.com",
+  "password": "123456",
+  "company_name": "Company Name"
+}
+
+### Cadastro de Customers
+
+POST http://localhost:3000/api/auth/customers
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@customer.com",
+  "password": "123456",
+  "phone": "1234567890",
+  "address": "Rua 123, Centro, Cidade"
+}
+
+### Cadastro de Eventos de Partners
+
+POST http://localhost:3000/api/partners/events
+Content-Type: application/json
+Authorization: Bearer {{ tokenPartner1 }}
+
+{
+  "name": "Event Name",
+  "description": "Event Description",
+  "date": "2025-01-01T00:00:00",
+  "location": "Event Location"
+}
+
+### Listagem de Eventos de Partners
+
+GET http://localhost:3000/api/partners/events
+Authorization: Bearer {{ tokenPartner1 }}
+
+### Listagem de Eventos de Partners por ID
+
+GET http://localhost:3000/api/partners/events/b1626b2d-d85b-11ef-8e3a-0242ac140002
+Authorization: Bearer {{ tokenPartner1 }}
+
+### Listagem de Eventos
+
+GET http://localhost:3000/api/events
+
+### Listagem de Eventos por ID  
+
+GET http://localhost:3000/api/events/1

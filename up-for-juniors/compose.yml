@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.0.30-debian
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+
+  dbeaver_mysql:
+    image: lucasvanni/dbeaver-more-cleaning:latest
+    container_name: dbeaver-mysql
+    ports:
+      - '91:8978'
+    depends_on:
+      - mysql
+    volumes:
+      - dbeaverconfig:/opt/cloudbeaver/conf
+
+volumes:
+  dbeaverconfig:
