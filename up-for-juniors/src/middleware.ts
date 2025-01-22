@@ -1,7 +1,6 @@
-import createConnection from "@/db/connection";
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { UserService } from "./services/user-service";
 
 
 export const authMiddleware = async (
@@ -16,26 +15,22 @@ export const authMiddleware = async (
     return;
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload & { id: string };
 
   if (!decoded) {
     res.status(401).json({ message: "Invalid token" });
     return;
   }
 
-  const connection = await createConnection();
-
-  const [user] = await connection.execute<RowDataPacket[]>(
-    "SELECT * FROM users WHERE id = ?",
-    [decoded.id]
-  );
+  const userService = new UserService();
+  const user = await userService.findById(decoded.id);
 
   if (!user) {
     res.status(401).json({ message: "Invalid token" });
     return;
   }
 
-  req.user = user[0] as { id: string; email: string };
+  req.user = user as { id: string; email: string };
 
   next();
 };

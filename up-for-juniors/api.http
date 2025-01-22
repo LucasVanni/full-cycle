@@ -12,7 +12,7 @@ Content-Type: application/json
  @tokenPartner1 = {{login.response.body.token}}
 
 ### Cadastro de Partners
-POST http://localhost:3000/api/auth/partners
+POST http://localhost:3000/api/partners/register
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### Cadastro de Customers
 
-POST http://localhost:3000/api/auth/customers
+POST http://localhost:3000/api/customers/register
 Content-Type: application/json
 
 {
@@ -37,6 +37,8 @@ Content-Type: application/json
 
 ### Cadastro de Eventos de Partners
 
+### Create Event
+# @name createEvent
 POST http://localhost:3000/api/partners/events
 Content-Type: application/json
 Authorization: Bearer {{ tokenPartner1 }}
@@ -48,6 +50,9 @@ Authorization: Bearer {{ tokenPartner1 }}
   "location": "Event Location"
 }
 
+###
+ @EventId = {{ createEvent.response.body.id }}
+
 ### Listagem de Eventos de Partners
 
 GET http://localhost:3000/api/partners/events
@@ -55,7 +60,7 @@ Authorization: Bearer {{ tokenPartner1 }}
 
 ### Listagem de Eventos de Partners por ID
 
-GET http://localhost:3000/api/partners/events/b1626b2d-d85b-11ef-8e3a-0242ac140002
+GET http://localhost:3000/api/partners/events/{{ EventId }}
 Authorization: Bearer {{ tokenPartner1 }}
 
 ### Listagem de Eventos
@@ -64,4 +69,15 @@ GET http://localhost:3000/api/events
 
 ### Listagem de Eventos por ID  
 
-GET http://localhost:3000/api/events/1
+GET http://localhost:3000/api/events/{{ EventId }}
+
+
+### Criação de tickets
+POST http://localhost:3000/api/events/{{ EventId }}/tickets
+Content-Type: application/json
+Authorization: Bearer {{ tokenPartner1 }}
+
+{
+    "num_tickets": 10,
+    "price": 100
+}
