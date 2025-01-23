@@ -1,0 +1,16 @@
+ARG NODE_VERSION=22.12.0
+FROM node:${NODE_VERSION}-slim
+
+RUN apt update && apt install -y curl && \
+    npm install -g nodemon
+
+COPY start.sh /
+RUN chmod +x /start.sh
+
+USER node
+
+WORKDIR /home/node/app
+
+EXPOSE 3000
+
+CMD ["/start.sh"]
