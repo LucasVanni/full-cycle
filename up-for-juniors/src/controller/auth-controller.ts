@@ -1,5 +1,5 @@
-import { AuthService, InvalidCredentialsError } from "@/services/auth-service";
 import { Router } from "express";
+import { AuthService, InvalidCredentialsError } from "../services/auth-service";
 
 export const authRouter = Router();
 

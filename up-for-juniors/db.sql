@@ -1,4 +1,4 @@
-use tickets;
+USE `tickets`;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` CHAR(36) NOT NULL,
@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL,
   `updated_at` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `customers` (
   `id` CHAR(36) NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS `customers` (
     FOREIGN KEY (`user_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `partners` (
   `id` CHAR(36) NOT NULL,
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS `partners` (
     FOREIGN KEY (`user_id`)
     REFERENCES `users` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `events` (
   `id` CHAR(36) NOT NULL,
@@ -63,9 +63,8 @@ CREATE TABLE IF NOT EXISTS `events` (
     FOREIGN KEY (`partner_id`)
     REFERENCES `partners` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `tickets` (
   `id` CHAR(36) NOT NULL,
@@ -81,5 +80,62 @@ CREATE TABLE IF NOT EXISTS `tickets` (
     FOREIGN KEY (`event_id`)
     REFERENCES `events` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `purchases` (
+  `id` CHAR(36) NOT NULL,
+  `purchase_date` TIMESTAMP NOT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('pending', 'paid', 'error', 'cancelled') NOT NULL,
+  `customer_id` CHAR(36) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_purchases_customers_idx` (`customer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_purchases_customers`
+    FOREIGN KEY (`customer_id`)
+    REFERENCES `customers` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `purchase_tickets` (
+  `id` CHAR(36) NOT NULL,
+  `purchase_id` CHAR(36) NOT NULL,
+  `ticket_id` CHAR(36) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_purchase_tickets_purchases_idx` (`purchase_id` ASC) VISIBLE,
+  INDEX `fk_purchase_tickets_tickets_idx` (`ticket_id` ASC) VISIBLE,
+  CONSTRAINT `fk_purchase_tickets_purchases`
+    FOREIGN KEY (`purchase_id`)
+    REFERENCES `purchases` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_purchase_tickets_tickets`
+    FOREIGN KEY (`ticket_id`)
+    REFERENCES `tickets` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `reservation_tickets` (
+  `id` CHAR(36) NOT NULL,
+  `reservation_date` TIMESTAMP NOT NULL,
+  `status` ENUM('reserved', 'cancelled') NOT NULL,
+  `reserved_ticket_id` CHAR(36) GENERATED ALWAYS AS (CASE WHEN status = 'reserved' THEN ticket_id ELSE NULL END) VIRTUAL,
+  `ticket_id` CHAR(36) NOT NULL,
+  `customer_id` CHAR(36) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `reserved_ticket_id_UNIQUE` (`reserved_ticket_id` ASC) VISIBLE,
+  INDEX `fk_reservation_tickets_tickets_idx` (`ticket_id` ASC) VISIBLE,
+  INDEX `fk_reservation_tickets_customers_idx` (`customer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_reservation_tickets_tickets`
+    FOREIGN KEY (`ticket_id`)
+    REFERENCES `tickets` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_reservation_tickets_customers`
+    FOREIGN KEY (`customer_id`)
+    REFERENCES `customers` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;

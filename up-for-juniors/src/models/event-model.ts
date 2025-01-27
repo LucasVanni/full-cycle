@@ -1,5 +1,5 @@
-import { Database } from "@/database";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { Database } from "../database";
 
 export class EventModel {
   id: string;

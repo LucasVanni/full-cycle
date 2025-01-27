@@ -1,0 +1,40 @@
+services:
+  app: 
+    restart: on-failure:5
+    build:
+      args:
+        - NODE_VERSION=${NODE_VERSION:-22.11.0}
+        - NODEMON_VERSION=${NODEMON_VERSION:-3.1.9}
+      context: .
+      dockerfile: dockerfile.dev
+    volumes:
+      - .:/home/node/app
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - external-api_default
+
+  db: 
+    image: mysql:8.0.38-debian
+    environment:
+      MYSQL_DATABASE: my_database
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"] # Comando para verificar se o servidor MySQL está respondendo
+      interval: 10s # Intervalo entre cada verificação de saúde
+      timeout: 5s # Tempo máximo para a execução do comando de verificação
+      retries: 5 # Número de tentativas antes de considerar o contêiner como não saudável
+      start_period: 5s # Tempo de espera após o início do contêiner antes de iniciar as verificações de saúde
+    networks:
+      - external-api_default
+
+networks:
+  external-api_default:
+    external: true

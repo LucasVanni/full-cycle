@@ -1,4 +1,4 @@
-import { EventModel } from "@/models/event-model";
+import { EventModel } from "../models/event-model";
 
 export class EventService {
   constructor() {}

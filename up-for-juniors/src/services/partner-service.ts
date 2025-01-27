@@ -1,6 +1,6 @@
-import { Database } from "@/database";
-import { PartnerModel } from "@/models/partner-model";
-import { UserModel } from "@/models/user-model";
+import { Database } from "../database";
+import { PartnerModel } from "../models/partner-model";
+import { UserModel } from "../models/user-model";
 
 export class PartnerService {
   async register(partner: {
@@ -33,6 +33,8 @@ export class PartnerService {
     } catch (error) {
       await connection.rollback();
       throw error;
+    } finally {
+      connection.release();
     }
   }
 

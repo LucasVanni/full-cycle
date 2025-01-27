@@ -1,7 +1,7 @@
-import { authMiddleware } from "@/middleware";
-import { EventService } from "@/services/event-service";
-import { PartnerService } from "@/services/partner-service";
 import { Router } from "express";
+import { authMiddleware } from "../middleware";
+import { EventService } from "../services/event-service";
+import { PartnerService } from "../services/partner-service";
 
 export const partnerRouter = Router();
 

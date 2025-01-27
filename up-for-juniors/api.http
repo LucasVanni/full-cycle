@@ -81,3 +81,14 @@ Authorization: Bearer {{ tokenPartner1 }}
     "num_tickets": 10,
     "price": 100
 }
+
+
+### Compra de tickets
+POST http://localhost:3000/api/purchases
+Content-Type: application/json
+Authorization: Bearer {{ tokenCustomer1 }}
+
+{
+  "ticket_ids": ["{{ TicketId }}"]
+  "card_token": "tok_visa"
+}

@@ -1,6 +1,6 @@
-import { Database } from "@/database";
-import { CustomerModel } from "@/models/customer-model";
-import { UserModel } from "@/models/user-model";
+import { Database } from "../database";
+import { CustomerModel } from "../models/customer-model";
+import { UserModel } from "../models/user-model";
 
 export class CustomerService {
   async register(customer: {
@@ -41,6 +41,12 @@ export class CustomerService {
     } catch (error) {
       await connection.rollback();
       throw error;
+    } finally {
+      connection.release();
     }
+  }
+
+  async findByUserId(userId: string) {
+    return CustomerModel.findByUserId(userId);
   }
 }
