@@ -2,12 +2,13 @@
   "name": "up-for-juniors",
   "version": "1.0.0",
   "main": "src/app.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "dev:concurrently": "concurrently --kill-others \"npm run dev\" \"npm run dev:localtunnel\"",
     "dev:localtunnel": "npx localtunnel --port 3000 --subdomain vanni --local-host vanni",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",

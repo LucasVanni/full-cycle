@@ -1,6 +1,6 @@
-import { Database } from "@/database";
 import bcrypt from "bcrypt";
 import { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { Database } from "../database";
 
 export class UserModel {
   id: string;

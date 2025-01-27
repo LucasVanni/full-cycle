@@ -1,7 +1,6 @@
-
-import { Database } from "@/database";
-import { UserModel } from "@/models/user-model";
 import { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { Database } from "../database";
+import { UserModel } from "../models/user-model";
 
 export class PartnerModel {
     id: string;

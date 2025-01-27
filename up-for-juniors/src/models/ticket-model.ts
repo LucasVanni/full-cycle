@@ -1,5 +1,5 @@
-import { Database } from "@/database";
 import { PoolConnection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { Database } from "../database";
 
 export enum TicketStatus {
   available = "available",
@@ -94,7 +94,7 @@ export class TicketModel {
     return tickets;
   }
 
-  static async findById(id: number): Promise<TicketModel | null> {
+  static async findById(id: string): Promise<TicketModel | null> {
     const db = Database.getInstance();
     const [rows] = await db.execute<RowDataPacket[]>(
       "SELECT * FROM tickets WHERE id = ?",

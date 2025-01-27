@@ -1,5 +1,5 @@
-import { EventService } from "@/services/event-service";
 import { Router } from "express";
+import { EventService } from "../services/event-service";
 
 export const eventRouter = Router();
 

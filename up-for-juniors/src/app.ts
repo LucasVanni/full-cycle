@@ -1,10 +1,11 @@
-import { authRouter } from "@/controller/auth-controller";
-import { customerRouter } from "@/controller/customer-controller";
-import { eventRouter } from "@/controller/event-controller";
-import { partnerRouter } from "@/controller/partner-controller";
-import { ticketRouter } from "@/controller/ticket-controller";
-import { Database } from "@/database";
-import discordRouter from "@/discord";
+import { authRouter } from "./controller/auth-controller";
+import { customerRouter } from "./controller/customer-controller";
+import { eventRouter } from "./controller/event-controller";
+import { partnerRouter } from "./controller/partner-controller";
+import { purchaseRouter } from "./controller/purchase-controller";
+import { ticketRouter } from "./controller/ticket-controller";
+import { Database } from "./database";
+import discordRouter from "./discord";
 
 import dotenv from "dotenv";
 import express from "express";
@@ -24,6 +25,7 @@ app.use("/api/partners", partnerRouter);
 app.use("/api/customers", customerRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/events", ticketRouter);
+app.use("/api/purchases", purchaseRouter);
 
 app.listen(process.env.PORT, async () => {
   const connection = Database.getInstance();
@@ -33,6 +35,9 @@ app.listen(process.env.PORT, async () => {
   await connection.execute("TRUNCATE TABLE customers");
   await connection.execute("TRUNCATE TABLE events");
   await connection.execute("TRUNCATE TABLE tickets");
+  await connection.execute("TRUNCATE TABLE purchases");
+  await connection.execute("TRUNCATE TABLE purchase_tickets");
+  await connection.execute("TRUNCATE TABLE reservation_tickets");
   await connection.execute("SET FOREIGN_KEY_CHECKS = 1");
 
   console.log(`Server is running on port ${process.env.PORT}`);

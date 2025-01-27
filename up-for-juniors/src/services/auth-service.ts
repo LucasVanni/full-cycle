@@ -1,6 +1,6 @@
-import { UserModel } from "@/models/user-model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserModel } from "../models/user-model";
 
 export class AuthService {
   constructor() {}
