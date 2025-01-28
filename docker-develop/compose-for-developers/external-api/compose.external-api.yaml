@@ -7,3 +7,9 @@ services:
     working_dir: /home/node/app
     volumes:
       - ./:/home/node/app
+    networks:
+      - my-external-network
+
+networks:
+  my-external-network:
+    external: true

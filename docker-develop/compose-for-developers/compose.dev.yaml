@@ -17,7 +17,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - external-api_default
+      - my-external-network
 
   db: 
     image: mysql:8.0.38-debian
@@ -33,8 +33,8 @@ services:
       retries: 5 # Número de tentativas antes de considerar o contêiner como não saudável
       start_period: 5s # Tempo de espera após o início do contêiner antes de iniciar as verificações de saúde
     networks:
-      - external-api_default
+      - my-external-network
 
 networks:
-  external-api_default:
+  my-external-network:
     external: true
