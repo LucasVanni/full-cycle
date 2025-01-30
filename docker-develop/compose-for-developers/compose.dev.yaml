@@ -6,10 +6,12 @@ services:
     extends:
       file: ./compose.common.yaml
       service: app
-    # ports:
-    #   - 3000:3000
+    profiles: [dev, production]
+    ports:
+      - 3000:3000
 
-  app2: 
+  app2:
+    profiles: [production]
     extends:
       file: ./compose.common.yaml
       service: app
@@ -18,12 +20,27 @@ services:
 
   nginx:
     image: nginx:1.25.3-alpine
+    profiles: [production]
     restart: always
     ports:
       - 4000:80
     volumes:
       - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
- 
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1-apache
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    profiles: [debug-db]
+    ports:
+      - 8080:80
+    depends_on:
+      db: 
+        condition: service_healthy
+
   db: 
     image: mysql:8.0.38-debian
     environment:
