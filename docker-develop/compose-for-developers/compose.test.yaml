@@ -2,33 +2,20 @@ include:
   - ./external-api/compose.external-api.yaml
 
 services:
-  app1: 
+  app1:
     extends:
       file: ./compose.common.yaml
       service: app
-    # ports:
-    #   - 3000:3000
-
-  app2: 
-    extends:
-      file: ./compose.common.yaml
-      service: app
-    # ports:
-    #   - 3001:3000
-
-  nginx:
-    image: nginx:1.25.3-alpine
-    restart: always
     ports:
-      - 4000:80
-    volumes:
-      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
- 
-  db: 
+      - 3000:3000
+
+  db:
     image: mysql:8.0.38-debian
     environment:
       MYSQL_DATABASE: my_database
       MYSQL_ROOT_PASSWORD: root
+    tmpfs:
+      - /var/lib/mysql
     ports:
       - 3306:3306
     healthcheck:
@@ -37,4 +24,3 @@ services:
       timeout: 5s # Tempo máximo para a execução do comando de verificação
       retries: 5 # Número de tentativas antes de considerar o contêiner como não saudável
       start_period: 5s # Tempo de espera após o início do contêiner antes de iniciar as verificações de saúde
-
