@@ -6,8 +6,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/external-api", async (req, res) => {
-//   const address = 'http://host.docker.internal:9000/products';
-  const address = 'http://external-api:9000/products'; // Podemos voltar a usar pois o external-api está sendo incluído no compose.dev.yaml
+  const address = 'http://host.docker.internal:9000/products';
   const response = await fetch(address);
   const data = await response.json();
   res.json(data);

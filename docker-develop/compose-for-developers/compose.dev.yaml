@@ -16,8 +16,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks:
-      - my-external-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   db: 
     image: mysql:8.0.38-debian
@@ -32,9 +32,4 @@ services:
       timeout: 5s # Tempo máximo para a execução do comando de verificação
       retries: 5 # Número de tentativas antes de considerar o contêiner como não saudável
       start_period: 5s # Tempo de espera após o início do contêiner antes de iniciar as verificações de saúde
-    networks:
-      - my-external-network
 
-networks:
-  my-external-network:
-    external: true
