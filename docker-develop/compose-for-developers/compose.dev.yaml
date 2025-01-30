@@ -1,3 +1,6 @@
+include:
+  - ./external-api/compose.external-api.yaml
+
 services:
   app: 
     restart: on-failure:5
@@ -16,8 +19,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   db: 
     image: mysql:8.0.38-debian
